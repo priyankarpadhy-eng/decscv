@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Luminous, clean modern UI canvas */
+  --canvas: #F8F9FA;
+  --canvas-subtle: #F1F3F5;
+  --surface: #FFFFFF;
+  --surface-subtle: #F8FAFC;
+  
+  /* Modern slate typography scale */
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --ink-muted: #94A3B8;
+
+  /* Refined, ultra-fine 1px borders */
+  --border-subtle: #F1F5F9;
+  --border-default: #E2E8F0;
+  --border-strong: #CBD5E1;
+
+  /* Vibrant curated brand accents from the design system */
+  --brand-purple: #6E44FF;
+  --brand-purple-light: #F3E8FF;
+  --brand-coral: #FF5722;
+  --brand-coral-light: #FFEDD5;
+  --brand-emerald: #10B981;
+  --brand-emerald-light: #DCFCE7;
+  --brand-amber: #F59E0B;
+  --brand-amber-light: #FEF3C7;
+  --brand-sky: #3B82F6;
+  --brand-sky-light: #EFF6FF;
+
+  /* Backward compatibility tokens */
+  --paper: var(--canvas);
+  --paper-2: var(--canvas-subtle);
+  --signal: var(--brand-coral);
+  --acid: var(--brand-emerald-light);
+  --sky: var(--brand-sky);
+  --line: var(--border-default);
+  --line-soft: var(--border-subtle);
+
+  /* Dynamic portfolio variables */
+  --accent: #6E44FF;
+  --bg: #07070A;
+  --fg: #EDEDED;
+  --muted: #8A8A93;
+}
+
+[data-theme="dark"] {
+  --canvas: #0F172A;
+  --canvas-subtle: #1E293B;
+  --surface: #1E293B;
+  --surface-subtle: #334155;
+  --ink: #F8FAFC;
+  --ink-soft: #94A3B8;
+  --ink-muted: #64748B;
+  --border-subtle: #1E293B;
+  --border-default: #334155;
+  --border-strong: #475569;
+  
+  --brand-purple-light: rgba(110, 68, 255, 0.2);
+  --brand-coral-light: rgba(255, 87, 34, 0.2);
+  --brand-emerald-light: rgba(16, 185, 129, 0.2);
+  --brand-amber-light: rgba(245, 158, 11, 0.2);
+  --brand-sky-light: rgba(59, 130, 246, 0.2);
+
+  --paper: var(--canvas);
+  --paper-2: var(--canvas-subtle);
+  --line: var(--border-default);
+  --line-soft: var(--border-subtle);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--canvas);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle modern grid pattern for canvas */
+.bg-subtle-grid {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+}
+
+/* Modern clean card with 1px border and diffuse soft shadow */
+.modern-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 6px 16px -2px rgba(0, 0, 0, 0.04);
+  transition: all 180ms ease;
+}
+
+.modern-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03), 0 12px 28px -4px rgba(0, 0, 0, 0.06);
+}
+
+/* Compatibility classes remapped to the sleek modern system */
+.hard-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 6px 16px -2px rgba(0, 0, 0, 0.04);
+  transition: all 180ms ease;
+}
+
+.hard-card-flat {
+  background-color: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+}
+
+.hard-pill {
+  border: 1px solid var(--border-default);
+  border-radius: 9999px;
+  background-color: var(--surface);
+}
+
+/* Button press mechanics with smooth scale */
+.btn-press {
+  transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 120ms ease;
+}
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Marquee infinite animation */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 28s linear infinite;
+}
+
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* Print styles for A4 Resume */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-page {
+    page-break-after: always;
+    break-after: page;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

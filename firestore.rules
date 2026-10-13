@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Profiles: read/write owner only from client, public reads handled by firebase-admin on server
+    match /profiles/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid)
+                    && request.resource.data.uid == uid
+                    && request.resource.data.username is string
+                    && request.resource.data.username.size() >= 3
+                    && request.resource.data.username.size() <= 30
+                    && (!('stats' in request.resource.data) || request.resource.data.stats.views == 0);
+      allow update: if isOwner(uid)
+                    && request.resource.data.uid == uid
+                    // stats cannot be mutated directly by client
+                    && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['stats', 'uid']));
+      allow delete: if isOwner(uid);
+    }
+
+    // Username reservation: claim via transaction
+    match /usernames/{username} {
+      allow read: if true;
+      allow create: if isAuthenticated() 
+                    && !exists(/databases/$(database)/documents/usernames/$(username))
+                    && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow update: if false;
+    }
+
+    // Redirects: admin or owner created
+    match /usernameRedirects/{oldUsername} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Daily views aggregation: server only
+    match /viewsDaily/{date} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    // Abuse reports: create allowed for anyone (with reasonable payload), read admin only
+    match /reports/{reportId} {
+      allow create: if request.resource.data.username is string
+                    && request.resource.data.reason is string
+                    && request.resource.data.reason.size() <= 1000;
+      allow read, update, delete: if isAuthenticated() && request.auth.token.admin == true;
+    }
+  }
+}
