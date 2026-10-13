@@ -4,32 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth-context";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { GoogleLogo, ArrowRight, Sparkle, Globe, FileText } from "@phosphor-icons/react";
+import { GoogleLogo, Globe, FileText } from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithGoogle, signInWithEmail, loginAsDemoUser } = useAuth();
+  const { signInWithGoogle } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      await signInWithEmail(email, password);
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err?.message || "Invalid credentials. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -63,73 +45,31 @@ export default function LoginPage() {
               Welcome back
             </h1>
             <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-              Log in to update your career portfolio or download your placement resume.
+              Sign in with your Google account to edit your career portfolio or download your placement resume.
             </p>
+
+            {error && (
+              <div className="p-3 mb-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-600 font-medium">
+                {error}
+              </div>
+            )}
 
             {/* Google Button */}
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="w-full py-3 px-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold shadow-sm flex items-center justify-center gap-2.5 mb-6 transition-all"
+              className="w-full py-3.5 px-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-sm font-semibold shadow-sm flex items-center justify-center gap-3 transition-all active:scale-98"
             >
-              <GoogleLogo size={18} weight="bold" className="text-slate-800" />
-              <span>Continue with Google</span>
-            </button>
-
-            <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 border-t border-slate-200" />
-              <span className="text-[11px] text-slate-400 uppercase font-semibold">Or with email</span>
-              <div className="flex-1 border-t border-slate-200" />
-            </div>
-
-            <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
-              <Input
-                label="Email"
-                type="email"
-                placeholder="rohit@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-
-              {error && <span className="text-xs text-rose-500 font-medium">{error}</span>}
-
-              <Button
-                type="submit"
-                variant="primary"
-                loading={loading}
-                className="w-full mt-2"
-              >
-                Sign In →
-              </Button>
-            </form>
-
-            <button
-              type="button"
-              onClick={() => {
-                loginAsDemoUser();
-                router.push("/dashboard");
-              }}
-              className="w-full mt-4 py-2.5 border border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-[#6E44FF] hover:text-[#6E44FF] text-center rounded-xl transition-colors"
-            >
-              Try Instant Demo Mode (No signup needed)
+              <GoogleLogo size={20} weight="bold" className="text-slate-800" />
+              <span>{loading ? "Signing in…" : "Continue with Google"}</span>
             </button>
           </div>
         </div>
 
         <div className="pt-8 text-xs text-slate-500">
-          Don&apos;t have an account yet?{" "}
-          <Link href="/signup" className="text-[#6E44FF] font-semibold hover:underline">
-            Sign up here
+          New to DecsCV?{" "}
+          <Link href="/editor" className="text-[#6E44FF] font-semibold hover:underline">
+            Try the free builder
           </Link>
         </div>
       </div>
@@ -146,9 +86,9 @@ export default function LoginPage() {
                 ● Live
               </span>
             </div>
-            <h3 className="font-display text-xl font-bold text-slate-900">cv.decslab.in/rohit-codes</h3>
+            <h3 className="font-display text-xl font-bold text-slate-900">One Form → Dual Output</h3>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              One form automatically generates your live portfolio link and A4 placement PDF.
+              Fill once. Switch instantly between a portfolio website and an A4 placement resume PDF.
             </p>
           </div>
 

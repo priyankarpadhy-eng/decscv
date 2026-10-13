@@ -24,13 +24,18 @@ import {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { user, profile: authProfile, logout, loading: authLoading } = useAuth();
   const { showToast } = useToast();
 
-  const [profile, setProfile] = useState<Profile>(SAMPLE_PROFILES.noir);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [showQrModal, setShowQrModal] = useState(false);
 
   useEffect(() => {
+    if (authProfile) {
+      setProfile(authProfile);
+      return;
+    }
+
     // Load local draft if available
     const draft = localStorage.getItem("decscv_draft_profile");
     if (draft) {
@@ -39,10 +44,62 @@ export default function DashboardPage() {
       } catch {
         // ignore
       }
+    } else if (user) {
+      // Clean profile with user's real credentials
+      setProfile({
+        uid: user.uid,
+        username: user.email ? user.email.split("@")[0] : "user",
+        schemaVersion: 1,
+        mode: "portfolio",
+        portfolio: {
+          style: "bento",
+          accent: "#6E44FF",
+          fontPair: 0,
+          colorMode: "light",
+          motion: "full",
+        },
+        resume: {
+          template: "modern",
+          accent: "#6E44FF",
+          scale: "M",
+          showPhoto: !!user.photoURL,
+        },
+        basics: {
+          name: user.displayName || "Your Name",
+          headline: "",
+          email: user.email || "",
+          photo: user.photoURL ? { url: user.photoURL } : undefined,
+          availableForWork: true,
+          links: [],
+        },
+        summary: "",
+        experience: [],
+        education: [],
+        projects: [],
+        skills: [],
+        achievements: [],
+        certifications: [],
+        sections: [],
+        seo: {},
+        visibility: "draft",
+        stats: { views: 0 },
+      });
     }
-  }, []);
+  }, [authProfile, user]);
 
-  const publicUrl = `https://cv.decslab.in/${profile.username}`;
+  const activeProfile = profile || {
+    username: user?.email ? user.email.split("@")[0] : "yourname",
+    visibility: "draft",
+    mode: "portfolio",
+    portfolio: { style: "bento" },
+    basics: { name: user?.displayName || "My Profile", photo: user?.photoURL ? { url: user.photoURL } : undefined },
+    projects: [],
+    experience: [],
+    skills: [],
+    stats: { views: 0 },
+  } as unknown as Profile;
+
+  const publicUrl = `https://cv.decslab.in/${activeProfile.username}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(publicUrl);
@@ -53,7 +110,7 @@ export default function DashboardPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${profile.basics.name}'s Portfolio`,
+          title: `${activeProfile.basics.name}'s Portfolio`,
           url: publicUrl,
         });
       } catch {
@@ -67,10 +124,10 @@ export default function DashboardPage() {
   // Completeness score calculation
   const getCompleteness = () => {
     let score = 20; // base for registration
-    if (profile.basics.photo?.url) score += 20;
-    if (profile.projects.length >= 2) score += 20;
-    if (profile.experience.length >= 1) score += 20;
-    if (profile.skills.length >= 5) score += 20;
+    if (activeProfile.basics?.photo?.url) score += 20;
+    if (activeProfile.projects?.length >= 2) score += 20;
+    if (activeProfile.experience?.length >= 1) score += 20;
+    if (activeProfile.skills?.length >= 5) score += 20;
     return Math.min(100, score);
   };
 
@@ -128,21 +185,21 @@ export default function DashboardPage() {
               </span>
               <span
                 className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
-                  profile.visibility === "public"
+                  activeProfile.visibility === "public"
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : "bg-slate-100 text-slate-500 border-slate-200"
                 }`}
               >
-                {profile.visibility === "public" ? "● Live on Web" : "○ Draft Mode"}
+                {activeProfile.visibility === "public" ? "● Live on Web" : "○ Draft Mode"}
               </span>
             </div>
             <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight break-all font-mono">
               {publicUrl}
             </h2>
             <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-              <span>Active style: <strong className="text-slate-700 uppercase">{profile.portfolio.style}</strong></span>
+              <span>Active style: <strong className="text-slate-700 uppercase">{activeProfile.portfolio.style}</strong></span>
               <span>·</span>
-              <span>Mode: <strong className="text-slate-700 uppercase">{profile.mode}</strong></span>
+              <span>Mode: <strong className="text-slate-700 uppercase">{activeProfile.mode}</strong></span>
             </div>
           </div>
 
@@ -156,7 +213,7 @@ export default function DashboardPage() {
               Copy Link
             </Button>
             <a
-              href={`/${profile.username}`}
+              href={`/${activeProfile.username}`}
               target="_blank"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition-all"
             >
@@ -196,11 +253,11 @@ export default function DashboardPage() {
             </div>
             <div className="my-3">
               <span className="font-display text-3xl font-extrabold text-slate-900">
-                {profile.stats?.views || 146}
+                {activeProfile.stats?.views || 0}
               </span>
             </div>
             <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
-              +17% engagement this month
+              Synced with Firestore
             </span>
           </div>
 
@@ -208,7 +265,7 @@ export default function DashboardPage() {
           <div className="p-6 border border-slate-200/90 rounded-2xl bg-white shadow-card flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Recent 7d Views
+                Showcase Projects
               </span>
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#10B981] flex items-center justify-center">
                 <Users size={20} weight="duotone" />
@@ -216,11 +273,11 @@ export default function DashboardPage() {
             </div>
             <div className="my-3">
               <span className="font-display text-3xl font-extrabold text-slate-900">
-                48
+                {activeProfile.projects?.length || 0}
               </span>
             </div>
             <span className="text-[11px] font-medium text-slate-400">
-              Verified server reads
+              Verified showcase builds
             </span>
           </div>
 
@@ -258,11 +315,11 @@ export default function DashboardPage() {
             </div>
             <div className="my-3">
               <span className="font-display text-2xl font-bold text-slate-900">
-                Updated
+                {activeProfile.visibility === "public" ? "Published" : "Draft"}
               </span>
             </div>
             <span className="text-[11px] font-medium text-slate-400">
-              Synced with Cloud CDN
+              Realtime Firestore Sync
             </span>
           </div>
         </div>
@@ -279,19 +336,19 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="space-y-2 text-xs font-medium text-slate-700">
-              {!profile.basics.photo?.url && (
+              {!activeProfile.basics?.photo?.url && (
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#6E44FF]" />
                   <span>Add a photo URL to increase profile view engagement (+20%)</span>
                 </div>
               )}
-              {profile.projects.length < 2 && (
+              {activeProfile.projects?.length < 2 && (
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#6E44FF]" />
                   <span>Add at least 2 key projects to showcase technical skills (+20%)</span>
                 </div>
               )}
-              {profile.skills.length < 5 && (
+              {activeProfile.skills?.length < 5 && (
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#6E44FF]" />
                   <span>Tag 5 or more tools and frameworks in your skills stack (+20%)</span>

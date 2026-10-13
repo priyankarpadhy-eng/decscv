@@ -4,12 +4,13 @@ import { getFirestore, Firestore } from "firebase/firestore";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDummyKeyForLocalTesting12345",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "decscv-prod.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "decscv-prod",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "decscv-prod.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789012",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789012:web:abcdef123456",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAU0vAvvfTKa2P9EgOgJv0Zgdnpe1oDiTM",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "decs-cv.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "decs-cv",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "decs-cv.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1024662125181",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1024662125181:web:856e29e523c33d93020f14",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-KVHL06H00P",
 };
 
 let app: FirebaseApp;
@@ -23,8 +24,7 @@ try {
   db = getFirestore(app);
   storage = getStorage(app);
 } catch (e) {
-  console.warn("Firebase client initialization fallback:", e);
-  // Fallbacks if SSR or build without credentials
+  console.warn("Firebase client initialization:", e);
   app = {} as FirebaseApp;
   auth = {} as Auth;
   db = {} as Firestore;
@@ -32,4 +32,6 @@ try {
 }
 
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
+
 export { app, auth, db, storage };
