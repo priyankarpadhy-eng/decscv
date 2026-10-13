@@ -35,11 +35,11 @@ export type SectionId =
 
 export interface Img {
   url: string;
-  w: number;
-  h: number;
-  blurDataUrl: string;
-  alt: string;
-  path: string;
+  w?: number;
+  h?: number;
+  blurDataUrl?: string;
+  alt?: string;
+  path?: string;
 }
 
 export interface ProfileLink {

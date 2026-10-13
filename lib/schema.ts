@@ -2,11 +2,11 @@ import { z } from "zod";
 
 export const ImgSchema = z.object({
   url: z.string().url(),
-  w: z.number().int().positive(),
-  h: z.number().int().positive(),
-  blurDataUrl: z.string(),
-  alt: z.string().max(120),
-  path: z.string(),
+  w: z.number().int().positive().optional(),
+  h: z.number().int().positive().optional(),
+  blurDataUrl: z.string().optional(),
+  alt: z.string().max(120).optional(),
+  path: z.string().optional(),
 });
 
 export const LinkSchema = z.object({
