@@ -421,7 +421,7 @@ export default function DashboardPage() {
           <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm">
             <div className="w-48 h-48 bg-slate-900 flex items-center justify-center p-3 text-white font-mono text-[10px] rounded-xl">
               <div className="w-full h-full bg-white flex flex-col items-center justify-center text-slate-900 p-2 rounded-lg">
-                <span className="font-bold text-xs">{profile.basics.name}</span>
+                <span className="font-bold text-xs">{activeProfile.basics.name}</span>
                 <span className="text-[9px] text-slate-500 break-all mt-2">{publicUrl}</span>
               </div>
             </div>
