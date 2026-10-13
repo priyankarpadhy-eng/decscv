@@ -8,8 +8,9 @@ import {
   signOut as fbSignOut,
   onAuthStateChanged,
   browserPopupRedirectResolver,
+  deleteUser,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db, googleProvider } from "./client";
 import { Profile } from "@/lib/types";
 import { slugifyName } from "@/lib/username";
@@ -22,6 +23,7 @@ interface AuthContextType {
   setProfile: (p: Profile | null) => void;
   signInWithGoogle: () => Promise<User | null>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   saveProfileToFirestore: (profileData: Profile) => Promise<void>;
 }
 
@@ -179,6 +181,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setProfile(null);
   };
 
+  const deleteAccount = async (): Promise<void> => {
+    const targetUser = user || (auth?.currentUser ?? null);
+    const targetUsername = profile?.username;
+
+    // 1. Delete from Firestore
+    try {
+      if (db && (db as any).type && targetUser) {
+        // Delete user account metadata document
+        await deleteDoc(doc(db, "users", targetUser.uid));
+
+        // Delete user's public profile document
+        if (targetUsername) {
+          await deleteDoc(doc(db, "profiles", targetUsername));
+        }
+
+        // Clean up any remaining documents matching this UID
+        const profilesRef = collection(db, "profiles");
+        const q = query(profilesRef, where("uid", "==", targetUser.uid));
+        const querySnap = await getDocs(q);
+        for (const snapDoc of querySnap.docs) {
+          await deleteDoc(snapDoc.ref);
+        }
+      }
+    } catch (err) {
+      console.warn("Firestore documents deletion note:", err);
+    }
+
+    // 2. Clear local storage traces
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("decscv_draft_profile");
+      localStorage.removeItem("decscv_draft");
+      if (targetUser) {
+        localStorage.removeItem(`decscv_profile_${targetUser.uid}`);
+      }
+    }
+
+    // 3. Delete Firebase Auth user record
+    if (targetUser && typeof (targetUser as any).delete === "function") {
+      try {
+        await deleteUser(targetUser);
+      } catch (err: any) {
+        if (err?.code === "auth/requires-recent-login") {
+          throw new Error("Security verification expired. Please sign out, log in again, and retry account deletion.");
+        }
+        throw err;
+      }
+    }
+
+    setUser(null);
+    setProfile(null);
+  };
+
   const saveProfileToFirestore = async (profileData: Profile) => {
     setProfile(profileData);
 
@@ -211,6 +265,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProfile,
         signInWithGoogle,
         logout,
+        deleteAccount,
         saveProfileToFirestore,
       }}
     >

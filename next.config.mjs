@@ -53,6 +53,20 @@ const nextConfig = {
       },
     ];
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/provacy',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
+        source: '/temts',
+        destination: '/terms',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

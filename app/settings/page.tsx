@@ -12,12 +12,20 @@ import { ArrowLeft, DownloadSimple, Trash, Moon, Sun } from "@phosphor-icons/rea
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { user, profile, logout, deleteAccount } = useAuth();
   const { showToast } = useToast();
 
-  const [username, setUsername] = useState("rohit-codes");
+  const currentUsername = profile?.username || (user?.email ? user.email.split("@")[0] : "user");
+  const [username, setUsername] = useState(currentUsername);
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [darkTheme, setDarkTheme] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  React.useEffect(() => {
+    if (profile?.username) {
+      setUsername(profile.username);
+    }
+  }, [profile]);
 
   const toggleTheme = () => {
     const next = !darkTheme;
@@ -35,7 +43,7 @@ export default function SettingsPage() {
   };
 
   const handleExportJson = () => {
-    const draft = localStorage.getItem("decscv_draft_profile") || "{}";
+    const draft = localStorage.getItem("decscv_draft_profile") || JSON.stringify(profile || {});
     const blob = new Blob([draft], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -45,15 +53,24 @@ export default function SettingsPage() {
     showToast({ message: "Exported profile data as JSON." });
   };
 
-  const handleDeleteAccount = () => {
-    if (deleteConfirm !== username) {
-      showToast({ message: "Username does not match confirmation.", type: "error" });
+  const handleDeleteAccount = async () => {
+    if (deleteConfirm !== username && deleteConfirm !== "DELETE") {
+      showToast({ message: "Confirmation does not match. Type DELETE or your username.", type: "error" });
       return;
     }
-    localStorage.clear();
-    logout();
-    showToast({ message: "Account and profile data permanently deleted." });
-    router.push("/");
+    try {
+      setIsDeleting(true);
+      await deleteAccount();
+      showToast({ message: "Account and profile data permanently deleted." });
+      router.push("/");
+    } catch (err: any) {
+      showToast({
+        message: err.message || "Failed to delete account. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -154,9 +171,10 @@ export default function SettingsPage() {
                 variant="danger"
                 icon={<Trash size={16} weight="bold" />}
                 onClick={handleDeleteAccount}
-                disabled={deleteConfirm !== username}
+                loading={isDeleting}
+                disabled={isDeleting || (deleteConfirm !== username && deleteConfirm !== "DELETE")}
               >
-                Delete Profile
+                {isDeleting ? "Deleting..." : "Delete Profile"}
               </Button>
             </div>
           </div>

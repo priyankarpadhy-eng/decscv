@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/firebase/auth-context";
 import { Profile } from "@/lib/types";
 import { SAMPLE_PROFILES } from "@/seed/sample-profiles";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import {
@@ -20,15 +21,22 @@ import {
   Eye,
   Calendar,
   Sparkle,
+  Trash,
+  DownloadSimple,
+  Warning,
+  ShieldCheck,
 } from "@phosphor-icons/react";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, profile: authProfile, logout, loading: authLoading } = useAuth();
+  const { user, profile: authProfile, logout, deleteAccount, loading: authLoading } = useAuth();
   const { showToast } = useToast();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (authProfile) {
@@ -118,6 +126,41 @@ export default function DashboardPage() {
       }
     } else {
       handleCopyLink();
+    }
+  };
+
+  const handleExportJson = () => {
+    const data = activeProfile || authProfile;
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `decscv_${activeProfile.username || "profile"}_backup.json`;
+    a.click();
+    showToast({ message: "Downloaded profile archive as JSON." });
+  };
+
+  const handleDeleteAccount = async () => {
+    const matchTarget = activeProfile.username;
+    if (deleteConfirmText !== "DELETE" && deleteConfirmText !== matchTarget) {
+      showToast({ message: "Confirmation does not match. Type DELETE to proceed.", type: "error" });
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await deleteAccount();
+      showToast({ message: "Your account and all portfolio data have been permanently erased." });
+      setShowDeleteModal(false);
+      router.push("/");
+    } catch (err: any) {
+      showToast({
+        message: err.message || "Failed to delete account. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -402,11 +445,53 @@ export default function DashboardPage() {
               </span>
               <h3 className="font-display text-xl font-bold mt-1 text-slate-900">Account & Data</h3>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                Change username slug, export JSON archive, or delete profile.
+                Change username slug, export JSON archive, or configure settings.
               </p>
             </div>
             <span className="text-xs font-semibold text-[#FF5722] mt-4">Manage settings →</span>
           </Link>
+        </div>
+
+        {/* Account Privacy & Danger Zone Card */}
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200/90 bg-white shadow-card flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Privacy & Data Ownership
+              </span>
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                DPDP Act Compliant
+              </span>
+            </div>
+            <h3 className="font-display text-xl font-bold text-slate-900">
+              Account Controls & Data Deletion
+            </h3>
+            <p className="text-xs text-slate-500 max-w-xl leading-relaxed">
+              You maintain 100% ownership of your resume and portfolio data. You can download an offline JSON backup or permanently purge your account, public URL, and all records from Firestore.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button
+              size="sm"
+              variant="secondary"
+              icon={<DownloadSimple size={15} weight="bold" />}
+              onClick={handleExportJson}
+            >
+              Export Data
+            </Button>
+            <Button
+              size="sm"
+              variant="danger"
+              icon={<Trash size={15} weight="bold" />}
+              onClick={() => {
+                setDeleteConfirmText("");
+                setShowDeleteModal(true);
+              }}
+            >
+              Delete Account
+            </Button>
+          </div>
         </div>
       </main>
 
@@ -429,6 +514,67 @@ export default function DashboardPage() {
           <p className="text-xs text-slate-500">
             Scan with any smartphone camera to visit {publicUrl}
           </p>
+        </div>
+      </Dialog>
+
+      {/* Delete Account Confirmation Dialog */}
+      <Dialog
+        open={showDeleteModal}
+        onClose={() => {
+          if (!isDeleting) setShowDeleteModal(false);
+        }}
+        title="Permanently Delete Account"
+        maxWidth="md"
+      >
+        <div className="flex flex-col gap-4 text-left">
+          <div className="p-3.5 bg-rose-50 border border-rose-200/80 rounded-xl text-rose-800 text-xs leading-relaxed flex items-start gap-2.5">
+            <Warning size={18} weight="bold" className="shrink-0 mt-0.5 text-rose-600" />
+            <div>
+              <p className="font-semibold">This action cannot be undone.</p>
+              <p className="mt-0.5 text-rose-700">
+                Deleting your account will immediately unpublish your portfolio at{" "}
+                <strong className="font-mono text-rose-900">{publicUrl}</strong>, release your username handle, and purge all your resume drafts, experiences, skills, and Firestore records.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold text-slate-700">
+              To confirm, type <span className="font-mono font-bold text-slate-900 select-all">DELETE</span> or your username{" "}
+              <span className="font-mono font-bold text-slate-900 select-all">{activeProfile.username}</span> below:
+            </label>
+            <Input
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value.trim())}
+              placeholder="DELETE"
+              disabled={isDeleting}
+              autoFocus
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              icon={<Trash size={15} weight="bold" />}
+              onClick={handleDeleteAccount}
+              loading={isDeleting}
+              disabled={
+                isDeleting ||
+                (deleteConfirmText !== "DELETE" && deleteConfirmText !== activeProfile.username)
+              }
+            >
+              {isDeleting ? "Deleting..." : "Permanently Delete Account"}
+            </Button>
+          </div>
         </div>
       </Dialog>
     </div>
