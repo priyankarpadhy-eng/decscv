@@ -45,6 +45,14 @@ const nextConfig = {
       },
     ];
   },
+  rewrites: async () => {
+    return [
+      {
+        source: '/__/auth/:path*',
+        destination: 'https://decs-cv.firebaseapp.com/__/auth/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

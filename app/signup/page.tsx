@@ -4,51 +4,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth-context";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { GoogleLogo, Sparkle, Globe, Check } from "@phosphor-icons/react";
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signInWithGoogle, signUpWithEmail } = useAuth();
+  const { signInWithGoogle } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const calculateStrength = (pass: string) => {
-    let score = 0;
-    if (pass.length >= 8) score++;
-    if (/[A-Z]/.test(pass)) score++;
-    if (/[0-9]/.test(pass)) score++;
-    if (/[^A-Za-z0-9]/.test(pass)) score++;
-    return score;
-  };
-
-  const strength = calculateStrength(password);
-  const strengthLabels = ["TOO WEAK", "WEAK", "FAIR", "STRONG", "VERY STRONG"];
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      await signUpWithEmail(email, password);
-      router.push("/onboarding");
-    } catch (err: any) {
-      setError(err?.message || "Failed to create account.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGoogleSignup = async () => {
     setLoading(true);
     setError("");
     try {
       await signInWithGoogle();
-      router.push("/onboarding");
+      router.push("/editor");
     } catch (err: any) {
       setError(err?.message || "Failed to sign up with Google.");
     } finally {
@@ -74,76 +44,23 @@ export default function SignupPage() {
               Claim your identity
             </h1>
             <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-              One account powers your live portfolio site and PDF placement resume.
+              Sign up with Google to automatically create and sync your career portfolio website and placement resume.
             </p>
+
+            {error && (
+              <div className="p-3 mb-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-600 font-medium">
+                {error}
+              </div>
+            )}
 
             <button
               onClick={handleGoogleSignup}
               disabled={loading}
-              className="w-full py-3 px-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold shadow-sm flex items-center justify-center gap-2.5 mb-6 transition-all"
+              className="w-full py-3.5 px-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-sm font-semibold shadow-sm flex items-center justify-center gap-3 transition-all active:scale-98"
             >
-              <GoogleLogo size={18} weight="bold" className="text-slate-800" />
-              <span>Sign up with Google</span>
+              <GoogleLogo size={20} weight="bold" className="text-slate-800" />
+              <span>{loading ? "Connecting Google Account…" : "Sign up with Google"}</span>
             </button>
-
-            <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 border-t border-slate-200" />
-              <span className="text-[11px] text-slate-400 uppercase font-semibold">Or with email</span>
-              <div className="flex-1 border-t border-slate-200" />
-            </div>
-
-            <form onSubmit={handleSignup} className="flex flex-col gap-4">
-              <Input
-                label="Email"
-                type="email"
-                placeholder="rohit@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-
-              {/* Password strength meter */}
-              {password && (
-                <div className="flex flex-col gap-1.5 text-xs">
-                  <div className="flex justify-between items-center text-[10px] text-slate-500 font-medium">
-                    <span>SECURITY: {strengthLabels[strength]}</span>
-                    <span>{strength * 25}%</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
-                    <div
-                      className={`h-full transition-all ${
-                        strength <= 1
-                          ? "bg-rose-500"
-                          : strength <= 2
-                          ? "bg-amber-500"
-                          : "bg-emerald-500"
-                      }`}
-                      style={{ width: `${Math.max(10, strength * 25)}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {error && <span className="text-xs text-rose-500 font-medium">{error}</span>}
-
-              <Button
-                type="submit"
-                variant="primary"
-                loading={loading}
-                className="w-full mt-2"
-              >
-                Create Account →
-              </Button>
-            </form>
           </div>
         </div>
 
@@ -159,11 +76,11 @@ export default function SignupPage() {
         <div className="max-w-md w-full space-y-5">
           <div className="p-6 border border-slate-200/90 rounded-2xl bg-white shadow-card">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-[#6E44FF] block mb-2">
-              Ready in 3 Minutes
+              Instant Cloud Sync
             </span>
-            <h3 className="font-display text-2xl font-bold text-slate-900">100% Free Forever</h3>
+            <h3 className="font-display text-2xl font-bold text-slate-900">Google Login & Firestore</h3>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              Designed specifically for engineering students, designers, and fresh grads in India.
+              Your data is safely stored in Google Cloud Firestore with realtime autosave and zero dummy placeholders.
             </p>
           </div>
         </div>

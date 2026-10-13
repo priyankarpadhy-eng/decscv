@@ -124,7 +124,7 @@ export function EditorContainer({ initialProfile, onSave }: EditorContainerProps
         if (!form.getValues("basics.email") && user.email) {
           setValue("basics.email", user.email);
         }
-        if (!form.getValues("basics.photo?.url") && user.photoURL) {
+        if (!form.getValues("basics.photo")?.url && user.photoURL) {
           setValue("basics.photo", { url: user.photoURL });
         }
         setValue("uid", user.uid);
