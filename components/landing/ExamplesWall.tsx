@@ -147,7 +147,13 @@ export function Footer() {
           </span>
         </div>
 
-        <div className="flex items-center gap-6 text-xs text-slate-500 font-medium">
+        <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-medium">
+          <Link href="/privacy" className="hover:text-slate-900 transition-colors">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" className="hover:text-slate-900 transition-colors">
+            Terms of Service
+          </Link>
           <Link href="/login" className="hover:text-slate-900 transition-colors">
             Log in
           </Link>
@@ -160,7 +166,7 @@ export function Footer() {
             rel="noreferrer"
             className="hover:text-[#6E44FF] font-semibold transition-colors"
           >
-            Built by Clawcode
+            DecsLab
           </a>
         </div>
       </div>
