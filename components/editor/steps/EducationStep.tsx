@@ -37,13 +37,13 @@ export function EducationStep({ form }: { form: UseFormReturn<Profile> }) {
             append({
               id: Math.random().toString(36).substring(2, 9),
               school: "",
-              degree: "B.Tech in Computer Science",
-              field: "Engineering",
-              start: "2021",
-              end: "2025",
-              current: true,
+              degree: "",
+              field: "",
+              start: "",
+              end: "",
+              current: false,
               gradeType: "CGPA",
-              grade: "9.0 / 10",
+              grade: "",
             })
           }
         >

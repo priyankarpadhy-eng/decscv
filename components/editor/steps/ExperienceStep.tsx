@@ -93,11 +93,11 @@ export function ExperienceStep({ form }: { form: UseFormReturn<Profile> }) {
               company: "",
               role: "",
               type: "Internship",
-              start: "May 2024",
-              end: "Jul 2024",
+              start: "",
+              end: "",
               current: false,
-              location: "Remote",
-              bullets: ["Engineered..."],
+              location: "",
+              bullets: [""],
             });
             setExpandedIndices((prev) => ({ ...prev, [fields.length]: true }));
           }}

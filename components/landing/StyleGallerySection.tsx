@@ -12,11 +12,11 @@ import { ArrowRight } from "@phosphor-icons/react";
 export function MarqueeStrip() {
   const items = [
     "ATS-COMPLIANT RESUME",
-    "8 DISTINCT PORTFOLIO ENGINES",
+    "8 PORTFOLIO STYLES",
     "FREE PUBLIC LINK",
     "ONE GUIDED FORM",
     "PDF EXPORT",
-    "TAILORED FOR INDIAN STUDENTS",
+    "CAMPUS & INDUSTRY READY",
     "INSTANT LIVE PREVIEW",
   ];
 
@@ -26,7 +26,7 @@ export function MarqueeStrip() {
         {items.concat(items).map((txt, idx) => (
           <span key={idx} className="flex items-center gap-6">
             <span>{txt}</span>
-            <span className="text-[#FF5722]">★</span>
+            <span className="text-slate-500">·</span>
           </span>
         ))}
       </div>
@@ -43,14 +43,14 @@ export function StyleGallerySection() {
       <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 border-b border-slate-200 pb-6">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-[#6E44FF]">
-            THE GALLERY
+            Portfolio styles
           </span>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-1">
-            8 Radically Different Engines
+            Eight distinct portfolio styles
           </h2>
         </div>
         <p className="text-sm text-slate-500 max-w-md font-sans leading-relaxed">
-          Not just a recolor. Each template is built from scratch with custom layout, bespoke typography, and interaction physics.
+          Choose a layout tailored to your discipline, from clean minimalist engineering to interactive terminal and bento grids.
         </p>
       </div>
 

@@ -7,7 +7,7 @@ describe("Username validation", () => {
   it("accepts valid usernames", () => {
     expect(validateUsername("aarav-sharma").valid).toBe(true);
     expect(validateUsername("priya99").valid).toBe(true);
-    expect(validateUsername("rohit-dev").valid).toBe(true);
+    expect(validateUsername("arjun-dev").valid).toBe(true);
   });
 
   it("rejects invalid usernames", () => {
@@ -25,9 +25,9 @@ describe("Username validation", () => {
   });
 
   it("generates 3 reasonable suggestions", () => {
-    const suggestions = generateUsernameSuggestions("Rohan Verma");
+    const suggestions = generateUsernameSuggestions("Rohan Patel");
     expect(suggestions.length).toBeGreaterThanOrEqual(1);
-    expect(suggestions).toContain("rohan-verma");
+    expect(suggestions).toContain("rohan-patel");
   });
 });
 
@@ -54,7 +54,7 @@ describe("ProfileSchema validation", () => {
   it("validates a minimal correct profile", () => {
     const minimal = {
       uid: "user_123",
-      username: "rohit-dev",
+      username: "candidate-user",
       mode: "portfolio",
       portfolio: {
         style: "noir",
@@ -70,9 +70,9 @@ describe("ProfileSchema validation", () => {
         showPhoto: false,
       },
       basics: {
-        name: "Rohit Sharma",
+        name: "Dev Candidate",
         headline: "Software Engineer & Builder",
-        email: "rohit@example.com",
+        email: "candidate@example.com",
         availableForWork: true,
         links: [],
       },

@@ -12,7 +12,7 @@ import { ArrowLeft, DownloadSimple, Trash, Moon, Sun } from "@phosphor-icons/rea
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, profile, logout, deleteAccount } = useAuth();
+  const { user, profile, logout, deleteAccount, loading: authLoading } = useAuth();
   const { showToast } = useToast();
 
   const currentUsername = profile?.username || (user?.email ? user.email.split("@")[0] : "user");
@@ -22,10 +22,14 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   React.useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/login?redirect=/settings");
+      return;
+    }
     if (profile?.username) {
       setUsername(profile.username);
     }
-  }, [profile]);
+  }, [profile, user, authLoading, router]);
 
   const toggleTheme = () => {
     const next = !darkTheme;
@@ -72,6 +76,18 @@ export default function SettingsPage() {
       setIsDeleting(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F9FA]">
+        <div className="w-6 h-6 border-2 border-slate-300 border-t-[#6E44FF] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col p-6 sm:p-12">

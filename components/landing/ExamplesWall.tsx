@@ -13,14 +13,14 @@ export function ExamplesWall() {
       <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 border-b border-slate-200 pb-6">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-[#6E44FF]">
-            COMMUNITY & EXAMPLES
+            Interactive examples
           </span>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-1">
-            Built by Indian Grads
+            Sample portfolio profiles
           </h2>
         </div>
         <span className="text-sm text-slate-500">
-          Sample profiles across tech, design, economics & civil engineering
+          Explore live profiles across software development, product design, and systems engineering
         </span>
       </div>
 

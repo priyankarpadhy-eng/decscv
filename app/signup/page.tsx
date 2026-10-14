@@ -1,24 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth-context";
 import { GoogleLogo, Globe, FileText, CircleNotch, ShieldCheck, Check } from "@phosphor-icons/react";
 
-export default function SignupPage() {
+function SignupContent() {
   const router = useRouter();
-  const { signInWithGoogle } = useAuth();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams?.get("redirect") || "/editor";
+  const { user, loading: authLoading, signInWithGoogle } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace(redirectTo);
+    }
+  }, [user, authLoading, router, redirectTo]);
 
   const handleGoogleSignup = async () => {
     setLoading(true);
     setError("");
     try {
       await signInWithGoogle();
-      router.push("/editor");
+      router.push(redirectTo);
     } catch (err: any) {
       setError(err?.message || "Failed to sign up with Google.");
     } finally {
@@ -115,5 +123,19 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#F8F9FA]">
+          <div className="w-6 h-6 border-2 border-slate-300 border-t-[#6E44FF] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <SignupContent />
+    </Suspense>
   );
 }

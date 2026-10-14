@@ -57,8 +57,8 @@ export function ExtrasStep({ form }: { form: UseFormReturn<Profile> }) {
               appendAch({
                 id: Math.random().toString(36).substring(2, 9),
                 title: "",
-                issuer: "SIH / College",
-                date: "2024",
+                issuer: "",
+                date: "",
               })
             }
           >
@@ -119,8 +119,8 @@ export function ExtrasStep({ form }: { form: UseFormReturn<Profile> }) {
               appendCert({
                 id: Math.random().toString(36).substring(2, 9),
                 name: "",
-                issuer: "AWS / Autodesk",
-                date: "2024",
+                issuer: "",
+                date: "",
               })
             }
           >

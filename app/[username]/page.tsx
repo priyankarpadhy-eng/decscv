@@ -6,30 +6,32 @@ import { Profile } from "@/lib/types";
 import { DynamicStyleRenderer } from "@/styles/DynamicStyleRenderer";
 import { ResumeView } from "@/resume/ResumeView";
 
+import { adminDb } from "@/lib/firebase/admin";
+
 // Helper to look up profile by username
 async function getProfileByUsername(username: string): Promise<Profile | null> {
   const clean = username.toLowerCase().trim();
 
-  // 1. Check sample seed profiles
+  // 1. Check Firestore if initialized
+  if (adminDb) {
+    try {
+      const docSnap = await adminDb.collection("profiles").doc(clean).get();
+      if (docSnap.exists) {
+        return docSnap.data() as Profile;
+      }
+    } catch (err) {
+      console.warn("Firestore profile fetch error:", err);
+    }
+  }
+
+  // 2. Check sample seed profiles for demo showcases
   for (const key of Object.keys(SAMPLE_PROFILES)) {
     if (SAMPLE_PROFILES[key].username.toLowerCase() === clean) {
       return SAMPLE_PROFILES[key];
     }
   }
 
-  // 2. Fallback sample if user tests any custom slug
-  const firstSample = SAMPLE_PROFILES.noir;
-  return {
-    ...firstSample,
-    username: clean,
-    basics: {
-      ...firstSample.basics,
-      name: clean
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" "),
-    },
-  };
+  return null;
 }
 
 export async function generateMetadata({

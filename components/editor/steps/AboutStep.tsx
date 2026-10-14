@@ -27,7 +27,7 @@ export function AboutStep({ form }: { form: UseFormReturn<Profile> }) {
         <Textarea
           label="Professional Summary"
           hint="Supports markdown: **bold**, *italic*, and [links](https://...)"
-          placeholder="e.g. Final-year Computer Science undergrad building high-concurrency microservices and open source tools. Previously interned at Razorpay..."
+          placeholder="Summarize your professional background, core skills, and career focus..."
           charCount={{ current: summaryValue.length, max: 1200 }}
           rows={6}
           {...register("summary")}

@@ -25,7 +25,7 @@ import {
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [roleType, setRoleType] = useState<string>("Student");
@@ -34,15 +34,17 @@ export default function OnboardingPage() {
   const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/login?redirect=/onboarding");
+      return;
+    }
+
     if (user?.displayName && !name) {
       setName(user.displayName);
       const generatedSlug = slugifyName(user.displayName) || "user";
       setUsername(generatedSlug);
-    } else if (!name) {
-      setName("Aarav Sharma");
-      setUsername("aarav-dev");
     }
-  }, [user, name]);
+  }, [user, name, authLoading, router]);
 
   const validation = validateUsername(username);
   const suggestions = generateUsernameSuggestions(name);
@@ -258,7 +260,7 @@ export default function OnboardingPage() {
                     setUsername(slugifyName(e.target.value));
                   }
                 }}
-                placeholder="e.g. Aarav Sharma"
+                placeholder="Your full name"
                 className="w-full bg-slate-50/70 px-3.5 py-2.5 text-sm font-sans border border-slate-200/90 rounded-xl focus:bg-white focus:outline-none focus:border-[#6E44FF] focus:ring-4 focus:ring-[#6E44FF]/10 text-slate-900"
               />
             </div>

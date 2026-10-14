@@ -39,7 +39,7 @@ export function ProjectsStep({ form }: { form: UseFormReturn<Profile> }) {
               id: Math.random().toString(36).substring(2, 9),
               title: "",
               desc: "",
-              tech: ["React", "TypeScript"],
+              tech: [],
               images: [],
               featured: true,
             })

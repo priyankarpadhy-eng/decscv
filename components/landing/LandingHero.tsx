@@ -11,7 +11,7 @@ import { SAMPLE_PROFILES } from "@/seed/sample-profiles";
 import { ArrowRight, Sparkle, Globe, FileText } from "@phosphor-icons/react";
 
 export function LandingHero() {
-  const [typedName, setTypedName] = useState("Aarav Sharma");
+  const [typedName, setTypedName] = useState("");
   const [activeStyle, setActiveStyle] = useState<StyleId>("bento");
   const [previewMode, setPreviewMode] = useState<"portfolio" | "resume">("portfolio");
   const previewBoxRef = useRef<HTMLDivElement>(null);
@@ -101,7 +101,7 @@ export function LandingHero() {
             href="#styles"
             className="inline-flex items-center justify-center text-sm font-semibold px-6 py-3.5 rounded-xl bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-2xs transition-all text-center"
           >
-            Explore 8 engines
+            Explore 8 styles
           </a>
         </div>
 
@@ -160,7 +160,7 @@ export function LandingHero() {
               type="text"
               value={typedName}
               onChange={(e) => setTypedName(e.target.value)}
-              placeholder="e.g. Aarav Sharma"
+              placeholder="Your name"
               className="w-full bg-slate-50/70 px-3.5 py-2.5 text-sm font-sans border border-slate-200/90 rounded-xl focus:bg-white focus:outline-none focus:border-[#6E44FF] focus:ring-4 focus:ring-[#6E44FF]/10 text-slate-900 transition-all"
             />
           </div>

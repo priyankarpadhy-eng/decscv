@@ -3,7 +3,7 @@ import { Profile } from "../lib/types";
 export const SAMPLE_PROFILES: Record<string, Profile> = {
   noir: {
     uid: "demo_noir",
-    username: "rohit-codes",
+    username: "arjun-codes",
     schemaVersion: 1,
     mode: "portfolio",
     portfolio: {
@@ -20,24 +20,22 @@ export const SAMPLE_PROFILES: Record<string, Profile> = {
       showPhoto: true,
     },
     basics: {
-      name: "Rohit Verma",
-      headline: "Distributed Systems & Full Stack Engineer · IIIT Hyderabad '25",
-      email: "rohit.verma@example.com",
-      phone: "+91 98765 43210",
-      location: "Hyderabad, India",
+      name: "Arjun Mehta",
+      headline: "Distributed Systems & Infrastructure Engineer",
+      email: "contact@decslab.in",
+      location: "Bengaluru, India",
       availableForWork: true,
       photo: {
         url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&auto=format&fit=crop&q=80",
         w: 600,
         h: 600,
         blurDataUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvd7POQAAAABJRU5ErkJggg==",
-        alt: "Rohit Verma",
+        alt: "Arjun Mehta",
         path: "users/demo_noir/avatar.jpg",
       },
       links: [
-        { kind: "github", label: "GitHub", url: "https://github.com/rohitcodes" },
-        { kind: "linkedin", label: "LinkedIn", url: "https://linkedin.com/in/rohitcodes" },
-        { kind: "leetcode", label: "LeetCode 2150", url: "https://leetcode.com/rohitcodes" },
+        { kind: "github", label: "GitHub", url: "https://github.com" },
+        { kind: "linkedin", label: "LinkedIn", url: "https://linkedin.com" },
       ],
     },
     summary:
@@ -103,7 +101,7 @@ export const SAMPLE_PROFILES: Record<string, Profile> = {
         desc: "Low-latency WebSocket order-book visualizer for Indian equities and F&O instruments with sub-5ms tick renders.",
         role: "Creator",
         url: "https://kitestream.dev",
-        repo: "https://github.com/rohitcodes/kitestream",
+        repo: "https://github.com/arjuncodes/kitestream",
         tech: ["Go", "Next.js", "WebSockets", "TimescaleDB"],
         images: [
           {
@@ -123,8 +121,8 @@ export const SAMPLE_PROFILES: Record<string, Profile> = {
         title: "ChaiQuery",
         desc: "In-memory distributed key-value store in Rust implementing the Raft consensus algorithm with WAL and snapshots.",
         role: "Author",
-        url: "https://github.com/rohitcodes/chaiquery",
-        repo: "https://github.com/rohitcodes/chaiquery",
+        url: "https://github.com/arjuncodes/chaiquery",
+        repo: "https://github.com/arjuncodes/chaiquery",
         tech: ["Rust", "Raft", "Tokio", "gRPC"],
         images: [],
         featured: true,
@@ -157,8 +155,8 @@ export const SAMPLE_PROFILES: Record<string, Profile> = {
       { id: "contact", visible: true, order: 7 },
     ],
     seo: {
-      title: "Rohit Verma — Distributed Systems Engineer",
-      description: "Portfolio of Rohit Verma, IIIT Hyderabad '25. High-concurrency systems, Go, Rust, microservices.",
+      title: "Arjun Mehta — Systems Engineer",
+      description: "Portfolio of Arjun Mehta. Distributed systems, Go, Rust, microservices.",
     },
     visibility: "public",
     stats: { views: 420 },

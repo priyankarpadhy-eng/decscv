@@ -43,7 +43,7 @@ export function BasicsStep({ form }: { form: UseFormReturn<Profile> }) {
       <div className="flex flex-col gap-4">
         <Input
           label="Full Name"
-          placeholder="e.g. Rohit Verma"
+          placeholder="Full name"
           {...register("basics.name")}
           error={errors.basics?.name?.message}
         />
@@ -51,7 +51,7 @@ export function BasicsStep({ form }: { form: UseFormReturn<Profile> }) {
         <Input
           label="Professional Headline"
           hint="Max 120 chars"
-          placeholder="e.g. Distributed Systems Engineer · IIIT Hyderabad '25"
+          placeholder="e.g. Software Engineer · Full-Stack & Systems"
           {...register("basics.headline")}
           error={errors.basics?.headline?.message}
         />
@@ -60,14 +60,14 @@ export function BasicsStep({ form }: { form: UseFormReturn<Profile> }) {
           <Input
             label="Email Address"
             type="email"
-            placeholder="e.g. rohit@example.com"
+            placeholder="name@example.com"
             {...register("basics.email")}
             error={errors.basics?.email?.message}
           />
 
           <Input
             label="Phone Number (Optional)"
-            placeholder="e.g. +91 98765 43210"
+            placeholder="+91 98765 43210"
             {...register("basics.phone")}
           />
         </div>
@@ -75,7 +75,7 @@ export function BasicsStep({ form }: { form: UseFormReturn<Profile> }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Location"
-            placeholder="e.g. Bengaluru, India"
+            placeholder="City, Country"
             {...register("basics.location")}
           />
 

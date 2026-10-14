@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth-context";
 import { Profile } from "@/lib/types";
-import { SAMPLE_PROFILES } from "@/seed/sample-profiles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
@@ -39,6 +38,11 @@ export default function DashboardPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/login?redirect=/dashboard");
+      return;
+    }
+
     if (authProfile) {
       setProfile(authProfile);
       return;
@@ -175,6 +179,18 @@ export default function DashboardPage() {
   };
 
   const completeness = getCompleteness();
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F9FA]">
+        <div className="w-6 h-6 border-2 border-slate-300 border-t-[#6E44FF] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col select-none">
