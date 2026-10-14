@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/firebase/auth-context";
-import { GoogleLogo, Globe, FileText } from "@phosphor-icons/react";
+import { GoogleLogo, Globe, FileText, CircleNotch, ShieldCheck, Check } from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,68 +27,79 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col md:flex-row">
-      {/* Left Column: Form */}
-      <div className="w-full md:w-1/2 p-8 sm:p-16 flex flex-col justify-between border-r border-slate-200/80 bg-white">
+    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col md:flex-row select-none">
+      {/* Left Column: Form Container */}
+      <div className="w-full md:w-1/2 p-6 sm:p-12 lg:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200/90 bg-white">
         <div>
           <Link
             href="/"
-            className="flex items-center gap-2 font-display text-sm font-bold text-slate-900 tracking-tight mb-12"
+            className="flex items-center gap-2 font-display text-sm font-bold text-slate-900 tracking-tight mb-10"
           >
-            <span className="w-7 h-7 rounded-lg bg-[#6E44FF] text-white flex items-center justify-center font-extrabold text-xs shadow-sm shadow-[#6E44FF]/25">
+            <span className="w-7 h-7 rounded-lg bg-[#6E44FF] text-white flex items-center justify-center font-extrabold text-xs shadow-2xs">
               D
             </span>
             <span>decs/cv</span>
           </Link>
-          <div className="max-w-md">
+
+          <div className="max-w-md mx-auto md:mx-0">
             <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
-              Welcome back
+              Sign in to your account
             </h1>
             <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-              Sign in with your Google account to edit your career portfolio or download your placement resume.
+              Continue with Google to manage your live portfolio website or update your placement resume.
             </p>
 
             {error && (
-              <div className="p-3 mb-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-600 font-medium">
+              <div className="p-3.5 mb-5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium leading-relaxed">
                 {error}
               </div>
             )}
 
-            {/* Google Button */}
+            {/* Google Authentication Button */}
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="w-full py-3.5 px-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-sm font-semibold shadow-sm flex items-center justify-center gap-3 transition-all active:scale-98"
+              className="w-full py-3.5 px-4 border border-slate-200/90 rounded-xl bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-800 text-sm font-semibold shadow-2xs flex items-center justify-center gap-3 transition-all active:scale-98 disabled:opacity-60"
             >
-              <GoogleLogo size={20} weight="bold" className="text-slate-800" />
-              <span>{loading ? "Signing in…" : "Continue with Google"}</span>
+              {loading ? (
+                <CircleNotch size={18} className="animate-spin text-[#6E44FF]" />
+              ) : (
+                <GoogleLogo size={19} weight="bold" className="text-slate-900" />
+              )}
+              <span>{loading ? "Authenticating with Google…" : "Continue with Google"}</span>
             </button>
+
+            {/* Security Guarantee */}
+            <div className="flex items-center justify-center gap-1.5 mt-5 text-[11px] text-slate-400">
+              <ShieldCheck size={15} weight="fill" className="text-emerald-500" />
+              <span>Official Google OAuth · Zero passwords stored</span>
+            </div>
           </div>
         </div>
 
-        <div className="pt-8 text-xs text-slate-500">
-          New to DecsCV?{" "}
+        <div className="pt-8 text-xs text-slate-500 text-center md:text-left">
+          Looking to explore first?{" "}
           <Link href="/editor" className="text-[#6E44FF] font-semibold hover:underline">
-            Try the free builder
+            Open the free builder
           </Link>
         </div>
       </div>
 
-      {/* Right Column: Modern Preview Card Wall */}
-      <div className="w-full md:w-1/2 bg-slate-50 p-12 hidden md:flex flex-col justify-center items-center relative overflow-hidden select-none">
-        <div className="max-w-md w-full space-y-5">
+      {/* Right Column: Value Showcase Panel */}
+      <div className="w-full md:w-1/2 bg-[#F8F9FA] p-8 sm:p-12 lg:p-16 flex flex-col justify-center items-center">
+        <div className="max-w-md w-full space-y-4">
           <div className="p-6 border border-slate-200/90 rounded-2xl bg-white shadow-card">
             <div className="flex items-center justify-between mb-3">
-              <span className="w-8 h-8 rounded-lg bg-purple-50 text-[#6E44FF] flex items-center justify-center">
+              <span className="w-9 h-9 rounded-xl bg-purple-50 text-[#6E44FF] flex items-center justify-center">
                 <Globe size={18} weight="duotone" />
               </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-                ● Live
+              <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                ● Realtime Sync
               </span>
             </div>
-            <h3 className="font-display text-xl font-bold text-slate-900">One Form → Dual Output</h3>
+            <h3 className="font-display text-xl font-bold text-slate-900">One Profile · Two Formats</h3>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              Fill once. Switch instantly between a portfolio website and an A4 placement resume PDF.
+              Your career facts remain synchronized across an ATS-safe A4 resume and a stunning portfolio website with 8 visual engines.
             </p>
           </div>
 
@@ -97,8 +108,24 @@ export default function LoginPage() {
               <FileText size={20} weight="duotone" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900">ATS Placement Resume</h4>
-              <p className="text-xs text-slate-500">Clean selectable typography with 100% parser accuracy.</p>
+              <h4 className="text-sm font-bold text-slate-900">Placement-Tested PDF</h4>
+              <p className="text-xs text-slate-500">Structured for Harvard and Indian campus recruitment drives.</p>
+            </div>
+          </div>
+
+          {/* Quick Bullet Checklist */}
+          <div className="p-5 border border-slate-200/80 rounded-2xl bg-white/70 space-y-2 text-xs text-slate-600 font-medium">
+            <div className="flex items-center gap-2">
+              <Check size={14} weight="bold" className="text-emerald-500 shrink-0" />
+              <span>Realtime autosave to Google Cloud Firestore</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check size={14} weight="bold" className="text-emerald-500 shrink-0" />
+              <span>Instant public link at cv.decslab.in/username</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Check size={14} weight="bold" className="text-emerald-500 shrink-0" />
+              <span>Full ownership: 1-click JSON export or account purge</span>
             </div>
           </div>
         </div>

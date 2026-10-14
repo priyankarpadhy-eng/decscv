@@ -52,10 +52,10 @@ export default function BentoStyle({ profile }: { profile: Profile }) {
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {/* Tile 1: Giant Intro Card (Spans 2 cols) */}
-          <div className="md:col-span-2 p-8 rounded-[28px] bg-white border border-slate-200/80 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between">
+          <div className="md:col-span-2 p-5 sm:p-8 rounded-2xl sm:rounded-[28px] bg-white border border-slate-200/80 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between">
             <div className="flex items-start justify-between gap-4">
               {profile.basics.photo?.url ? (
-                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm shrink-0">
                   <Image
                     src={profile.basics.photo.url}
                     alt={profile.basics.name}
@@ -64,33 +64,33 @@ export default function BentoStyle({ profile }: { profile: Profile }) {
                   />
                 </div>
               ) : (
-                <div className="w-20 h-20 rounded-2xl bg-purple-50 text-[#6E44FF] flex items-center justify-center font-display font-black text-2xl border border-purple-100 shadow-sm">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-purple-50 text-[#6E44FF] flex items-center justify-center font-display font-black text-xl sm:text-2xl border border-purple-100 shadow-sm shrink-0">
                   {profile.basics.name.slice(0, 2).toUpperCase()}
                 </div>
               )}
               {profile.basics.availableForWork && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
                   <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
                   Available for hire
                 </span>
               )}
             </div>
 
-            <div className="mt-8 flex flex-col gap-2">
+            <div className="mt-6 sm:mt-8 flex flex-col gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                 Craftsman & Developer
               </span>
-              <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              <h1 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 {profile.basics.name}
               </h1>
-              <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
                 {profile.basics.headline || "Building reliable systems and human-friendly digital products."}
               </p>
             </div>
           </div>
 
-          {/* Tile 2: Vibrant Coral / Orange Highlight Card (Matching Image 1) */}
-          <div className="p-7 rounded-[28px] bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20 flex flex-col justify-between relative overflow-hidden group">
+          {/* Tile 2: Vibrant Coral / Orange Highlight Card */}
+          <div className="p-5 sm:p-7 rounded-2xl sm:rounded-[28px] bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/20 flex flex-col justify-between relative overflow-hidden group">
             {/* Subtle decorative background watermark */}
             <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none" />
             

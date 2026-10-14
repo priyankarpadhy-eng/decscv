@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Profile } from "@/lib/types";
@@ -106,29 +106,35 @@ export function EditorContainer({ initialProfile, onSave }: EditorContainerProps
   const form = useForm<Profile>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: getInitialProfile(),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const { control, reset, setValue } = form;
   const watchedProfile = useWatch({ control }) as Profile;
+  const deferredProfile = React.useDeferredValue(watchedProfile);
 
-  // When user signs in with Google, update form with their real details if fields are empty
+  // Prevent repeated resets from wiping out active typing when Firestore autosaves
+  const initialHydratedRef = useRef(false);
+
   useEffect(() => {
-    if (user) {
-      if (authProfile) {
-        reset(authProfile);
-      } else {
-        if (!form.getValues("basics.name") && user.displayName) {
-          setValue("basics.name", user.displayName);
-        }
-        if (!form.getValues("basics.email") && user.email) {
-          setValue("basics.email", user.email);
-        }
-        if (!form.getValues("basics.photo")?.url && user.photoURL) {
-          setValue("basics.photo", { url: user.photoURL });
-        }
-        setValue("uid", user.uid);
+    if (authProfile && !initialHydratedRef.current) {
+      reset(authProfile);
+      initialHydratedRef.current = true;
+      return;
+    }
+
+    if (user && !initialHydratedRef.current) {
+      if (!form.getValues("basics.name") && user.displayName) {
+        setValue("basics.name", user.displayName);
       }
+      if (!form.getValues("basics.email") && user.email) {
+        setValue("basics.email", user.email);
+      }
+      if (!form.getValues("basics.photo")?.url && user.photoURL) {
+        setValue("basics.photo", { url: user.photoURL });
+      }
+      setValue("uid", user.uid);
+      initialHydratedRef.current = true;
     }
   }, [user, authProfile, reset, setValue, form]);
 
@@ -154,18 +160,30 @@ export function EditorContainer({ initialProfile, onSave }: EditorContainerProps
     [onSave, saveProfileToFirestore, setSaveStatus, setLastSavedTime]
   );
 
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      setSaveStatus("saving");
-      const timer = setTimeout(() => {
-        if (value) handleAutosave(value as Profile);
-      }, 1500);
+  const autosaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-      return () => clearTimeout(timer);
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      // Clear any pending timer so typing is never interrupted
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current);
+      }
+
+      autosaveTimerRef.current = setTimeout(() => {
+        const currentVals = form.getValues();
+        if (currentVals) {
+          handleAutosave(currentVals as Profile);
+        }
+      }, 1500);
     });
 
-    return () => subscription.unsubscribe();
-  }, [form, handleAutosave, setSaveStatus]);
+    return () => {
+      subscription.unsubscribe();
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current);
+      }
+    };
+  }, [form, handleAutosave]);
 
   // Keyboard shortcuts (Cmd+S, ?)
   useEffect(() => {
@@ -443,7 +461,7 @@ export function EditorContainer({ initialProfile, onSave }: EditorContainerProps
             mobileView === "form" ? "hidden lg:flex" : "flex"
           }`}
         >
-          <PreviewFrame profile={watchedProfile || getInitialProfile()} />
+          <PreviewFrame profile={deferredProfile || watchedProfile || getInitialProfile()} />
         </div>
       </div>
 

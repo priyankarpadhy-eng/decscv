@@ -67,7 +67,7 @@ export function StyleGallerySection() {
             >
               {/* Mini render box */}
               <div className="relative w-full h-52 bg-slate-950 overflow-hidden border-b border-slate-100">
-                <div className="w-[800px] h-[550px] origin-top-left scale-[0.38] pointer-events-none select-none">
+                <div className="w-[800px] h-[550px] origin-top-left scale-[0.34] sm:scale-[0.38] pointer-events-none select-none">
                   <DynamicStyleRenderer profile={sample} />
                 </div>
                 <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">

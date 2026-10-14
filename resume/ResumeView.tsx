@@ -7,7 +7,7 @@ export function ClassicResume({ profile }: { profile: Profile }) {
   const accent = profile.resume.accent || "#0F172A";
 
   return (
-    <div className="font-serif text-slate-900 leading-normal p-8 sm:p-14 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
+    <div className="font-serif text-slate-900 leading-normal p-4 sm:p-8 md:p-12 lg:p-14 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
       {/* Header */}
       <header className="border-b-2 border-slate-900 pb-4 mb-6 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 font-serif">
@@ -167,7 +167,7 @@ export function ModernResume({ profile }: { profile: Profile }) {
   const accent = profile.resume.accent || "#6E44FF";
 
   return (
-    <div className="font-sans text-slate-900 leading-normal p-8 sm:p-14 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
+    <div className="font-sans text-slate-900 leading-normal p-4 sm:p-8 md:p-12 lg:p-14 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
       {/* Modern Top Header with Sleek Accent Line */}
       <header className="pb-5 mb-6 border-b border-slate-200">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
@@ -345,7 +345,7 @@ export function ModernResume({ profile }: { profile: Profile }) {
 
 export function CompactResume({ profile }: { profile: Profile }) {
   return (
-    <div className="font-sans text-slate-900 leading-tight p-6 sm:p-10 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full text-xs">
+    <div className="font-sans text-slate-900 leading-tight p-4 sm:p-8 md:p-10 max-w-[210mm] mx-auto bg-white min-h-[297mm] shadow-card print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full text-xs">
       {/* Header */}
       <header className="border-b-2 border-slate-900 pb-3 mb-4 flex justify-between items-end">
         <div>

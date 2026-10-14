@@ -130,32 +130,32 @@ export default function TerminalStyle({ profile }: { profile: Profile }) {
       }`}
       style={{ "--accent": accent } as React.CSSProperties}
     >
-      <div className="w-full max-w-4xl border border-[#39FF88]/30 rounded-lg bg-[#070A08] shadow-2xl overflow-hidden flex flex-col min-h-[640px]">
+      <div className="w-full max-w-4xl border border-[#39FF88]/30 rounded-lg bg-[#070A08] shadow-2xl overflow-hidden flex flex-col h-[85vh] sm:h-[88vh] max-h-[800px]">
         {/* Terminal Titlebar */}
         <div className="bg-[#121914] px-4 py-2.5 flex items-center justify-between border-b border-[#39FF88]/20 text-xs">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-[#FF5F56] inline-block" />
             <span className="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block" />
             <span className="w-3 h-3 rounded-full bg-[#27C93F] inline-block" />
-            <span className="ml-3 text-white/50 tracking-wider">
+            <span className="ml-2 text-white/50 tracking-wider truncate text-[11px] sm:text-xs">
               bash — {profile.username}@decscv:~
             </span>
           </div>
           <button
             onClick={() => setCrtEnabled(!crtEnabled)}
-            className="text-[10px] uppercase px-2 py-0.5 border border-white/20 rounded hover:border-[var(--accent)] text-white/70"
+            className="text-[10px] uppercase px-2 py-0.5 border border-white/20 rounded hover:border-[var(--accent)] text-white/70 shrink-0"
           >
             CRT: {crtEnabled ? "ON" : "OFF"}
           </button>
         </div>
 
         {/* Quick command buttons for mobile / quick tapping */}
-        <div className="bg-[#0e1410] px-4 py-2 border-b border-[#39FF88]/10 flex flex-wrap gap-2 text-xs">
+        <div className="bg-[#0e1410] px-3 sm:px-4 py-2 border-b border-[#39FF88]/10 flex flex-wrap gap-1.5 text-xs overflow-x-auto no-scrollbar">
           {["whoami", "about", "projects", "skills", "experience", "contact", "clear"].map((c) => (
             <button
               key={c}
               onClick={() => runCommand(c)}
-              className="px-2.5 py-1 rounded bg-[#17221b] border border-[#39FF88]/20 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors text-[11px]"
+              className="px-2.5 py-1 rounded bg-[#17221b] border border-[#39FF88]/20 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors text-[11px] shrink-0"
             >
               ${c}
             </button>
@@ -163,7 +163,7 @@ export default function TerminalStyle({ profile }: { profile: Profile }) {
         </div>
 
         {/* Console Log Buffer */}
-        <div className="p-4 sm:p-6 flex-1 overflow-y-auto space-y-1.5 text-xs sm:text-sm leading-relaxed">
+        <div className="p-3 sm:p-6 flex-1 overflow-y-auto space-y-1.5 text-xs sm:text-sm leading-relaxed font-mono">
           {history.map((line, i) => (
             <div key={i} className="whitespace-pre-wrap break-all">
               {line.startsWith("guest@") ? (
@@ -179,8 +179,10 @@ export default function TerminalStyle({ profile }: { profile: Profile }) {
         </div>
 
         {/* CLI Input Line */}
-        <div className="p-4 bg-[#0a0f0c] border-t border-[#39FF88]/20 flex items-center gap-2 text-sm">
-          <span className="text-[var(--accent)] font-bold">guest@decscv:~$</span>
+        <div className="p-3 sm:p-4 bg-[#0a0f0c] border-t border-[#39FF88]/20 flex items-center gap-2 text-xs sm:text-sm">
+          <span className="text-[var(--accent)] font-bold shrink-0">
+            <span className="hidden sm:inline">guest@decscv:~</span>$
+          </span>
           <input
             type="text"
             value={inputVal}

@@ -59,14 +59,14 @@ export default function NoirStyle({ profile }: { profile: Profile }) {
         }}
       />
 
-      <div className="relative z-20 max-w-6xl mx-auto px-6 py-20 flex flex-col gap-28">
+      <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 flex flex-col gap-14 sm:gap-24">
         {/* Header / Nav */}
-        <header className="flex items-center justify-between border-b border-white/10 pb-6">
-          <span className="font-mono text-xs tracking-widest text-[#8A8A93] uppercase">
+        <header className="flex items-center justify-between border-b border-white/10 pb-5">
+          <span className="font-mono text-[11px] sm:text-xs tracking-widest text-[#8A8A93] uppercase truncate max-w-[200px] sm:max-w-none">
             // {profile.username}.cv.decslab.in
           </span>
           {profile.basics.availableForWork && (
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/5 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/5 text-[11px] font-mono shrink-0">
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accent }} />
               <span className="text-[#EDEDED]">available for work</span>
             </div>
@@ -74,12 +74,12 @@ export default function NoirStyle({ profile }: { profile: Profile }) {
         </header>
 
         {/* Hero */}
-        <section className="flex flex-col gap-8 pt-10">
-          <div className="flex flex-col gap-4">
+        <section className="flex flex-col gap-6 sm:gap-8 pt-4 sm:pt-8">
+          <div className="flex flex-col gap-3">
             <span className="font-mono text-xs text-[#8A8A93] tracking-widest uppercase">00 / INTRO</span>
-            <h1 className="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl tracking-tight leading-[1.05] flex flex-wrap">
-              {profile.basics.name.split(" ").map((word, wIdx) => (
-                <span key={wIdx} className="inline-block mr-4">
+            <h1 className="font-display font-extrabold text-3xl sm:text-6xl md:text-8xl tracking-tight leading-[1.05] flex flex-wrap break-words">
+              {(profile.basics?.name || "Your Name").split(" ").map((word, wIdx) => (
+                <span key={wIdx} className="inline-block mr-3 sm:mr-4">
                   {word.split("").map((char, cIdx) => (
                     <span
                       key={cIdx}

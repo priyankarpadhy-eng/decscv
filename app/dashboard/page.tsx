@@ -177,29 +177,29 @@ export default function DashboardPage() {
   const completeness = getCompleteness();
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans flex flex-col select-none">
       {/* Top Bar */}
-      <header className="h-16 border-b border-slate-200/80 bg-white px-6 flex items-center justify-between z-30">
+      <header className="h-16 border-b border-slate-200/80 bg-white px-4 sm:px-8 flex items-center justify-between z-30">
         <div className="flex items-center gap-3">
           <Link
             href="/"
             className="flex items-center gap-2 font-display text-sm font-bold text-slate-900 tracking-tight"
           >
-            <span className="w-7 h-7 rounded-lg bg-[#6E44FF] text-white flex items-center justify-center font-extrabold text-xs shadow-sm shadow-[#6E44FF]/25">
+            <span className="w-7 h-7 rounded-lg bg-[#6E44FF] text-white flex items-center justify-center font-extrabold text-xs shadow-2xs">
               D
             </span>
             <span>decs/cv</span>
           </Link>
           <span className="text-slate-300">/</span>
-          <span className="text-xs font-semibold text-slate-600">
-            Overview
+          <span className="text-xs font-semibold text-slate-600 truncate max-w-[120px] sm:max-w-none">
+            {activeProfile.basics.name || "Overview"}
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/editor"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-[#6E44FF] text-white shadow-sm shadow-[#6E44FF]/25 hover:bg-[#5E34E8] active:scale-95 transition-all"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 sm:px-4 py-2 rounded-xl bg-[#6E44FF] text-white shadow-sm shadow-[#6E44FF]/25 hover:bg-[#5E34E8] active:scale-95 transition-all"
           >
             <PencilSimple size={15} weight="bold" />
             <span>Open Builder</span>
@@ -218,10 +218,10 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Dashboard Container */}
-      <main className="max-w-6xl w-full mx-auto p-6 sm:p-10 flex flex-col gap-6 flex-1">
-        {/* Top Link Card Styled Like Clean Hero Card (Image 1) */}
-        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200/90 bg-white shadow-card flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex flex-col gap-2">
+      <main className="max-w-6xl w-full mx-auto p-4 sm:p-8 lg:p-10 flex flex-col gap-6 flex-1">
+        {/* Top Link Card Styled Like Clean Hero Card */}
+        <div className="p-5 sm:p-8 rounded-2xl border border-slate-200/90 bg-white shadow-card flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex flex-col gap-2 w-full md:w-auto">
             <div className="flex items-center gap-2.5">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                 Your Public Link
